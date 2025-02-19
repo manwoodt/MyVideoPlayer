@@ -8,11 +8,10 @@ import com.vk.domain.repository.VideoRepository
 
 class VideoRepositoryImpl(
     private val apiService: PixabayApiService,
-    private val apiKey: String,
 ) : VideoRepository {
 
     override suspend fun getVideos(): List<VideoInfo> {
-        val response = apiService.getVideos(apiKey)
+        val response = apiService.getVideos()
         if (response.isSuccessful) {
             val body = response.body()
             val result = body?.hits?.map { it.toDomain() } ?: emptyList()

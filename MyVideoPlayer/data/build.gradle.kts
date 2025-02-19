@@ -13,6 +13,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+      //  buildConfigField("String","API_KEY", "\"${project.findProperty("API_KEY")}\"")
     }
 
     buildTypes {
@@ -31,11 +32,16 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+    //    buildConfig =true
+    }
 }
 
 dependencies {
 
     implementation(project(":domain"))
+    //implementation(libs.androidx.security.crypto.ktx)
+    implementation(libs.androidx.security.crypto)
 
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
