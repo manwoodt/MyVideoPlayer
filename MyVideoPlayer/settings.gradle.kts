@@ -21,4 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "MyVideoPlayer"
 include(":app")
- 
+include(":presentation")
+include(":data")
+include(":domain")
