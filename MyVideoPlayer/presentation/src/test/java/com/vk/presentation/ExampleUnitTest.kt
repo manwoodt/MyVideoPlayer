@@ -1,4 +1,4 @@
-package com.vk.mylibrary
+package com.vk.presentation
 
 import org.junit.Test
 

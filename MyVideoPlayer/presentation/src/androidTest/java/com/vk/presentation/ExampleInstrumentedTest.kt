@@ -1,4 +1,4 @@
-package com.vk.mylibrary
+package com.vk.presentation
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
