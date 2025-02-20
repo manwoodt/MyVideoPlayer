@@ -41,7 +41,10 @@ dependencies {
     implementation(project(":domain"))
 
     implementation (libs.koin.core)
-    implementation(libs.koin.android)
+    implementation (libs.koin.android)
+
+    implementation (libs.koin.androidx.compose)
+  //  implementation(libs.koin.androidx.compose.navigation)
 
     implementation (libs.androidx.media3.session)
     implementation(libs.androidx.media3.exoplayer)
@@ -50,6 +53,7 @@ dependencies {
     implementation (libs.androidx.lifecycle.viewmodel.compose)
 
     implementation(libs.androidx.navigation.ui.ktx)
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

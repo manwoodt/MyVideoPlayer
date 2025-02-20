@@ -4,6 +4,7 @@ import android.app.Application
 import com.vk.data.SecureStorage
 import com.vk.data.di.dataModule
 import com.vk.domain.di.domainModule
+import com.vk.presentation.di.presentationModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -18,7 +19,7 @@ class MyApplication: Application() {
 
         startKoin{
         androidContext(this@MyApplication)
-            modules(dataModule, domainModule)
+            modules(domainModule,dataModule, presentationModule)
         }
     }
 }

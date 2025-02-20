@@ -40,7 +40,6 @@ android {
 dependencies {
 
     implementation(project(":domain"))
-    //implementation(libs.androidx.security.crypto.ktx)
     implementation(libs.androidx.security.crypto)
 
     ksp(libs.androidx.room.compiler)
