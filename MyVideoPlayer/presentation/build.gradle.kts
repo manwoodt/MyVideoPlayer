@@ -42,9 +42,11 @@ dependencies {
 
     implementation (libs.koin.core)
     implementation (libs.koin.android)
-
     implementation (libs.koin.androidx.compose)
-  //  implementation(libs.koin.androidx.compose.navigation)
+
+    implementation(libs.coil.compose)
+
+    implementation (libs.exoplayer)
 
     implementation (libs.androidx.media3.session)
     implementation(libs.androidx.media3.exoplayer)

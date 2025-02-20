@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -38,18 +39,19 @@ fun VideoListScreen(onVideoSelected: (VideoInfo) -> Unit = {}) {
 
     LaunchedEffect(Unit) {
         viewModel.loadVideos()
+
     }
     Scaffold() { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-        ){
-            when
-            {
-                isLoading ->{
+        ) {
+            when {
+                isLoading -> {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
+
                 error != null -> {
                     Text(
                         text = "Ошибка: $error",
@@ -57,9 +59,13 @@ fun VideoListScreen(onVideoSelected: (VideoInfo) -> Unit = {}) {
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
+
                 else -> {
                     LazyColumn(modifier = Modifier.fillMaxSize().padding(8.dp)) {
-                      item {  Text("тест")}
+                        items(videos) { video ->
+                            VideoListItem(video, onClick = { onVideoSelected(video) })
+
+                        }
                     }
                 }
             }
