@@ -16,6 +16,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.ui.PlayerView
 
 @Composable
+//добавить кнопку назад
 fun VideoPlayerScreen(video: VideoInfo, onBack: () -> Unit) {
     val context = LocalContext.current
     val exoPlayer = remember{

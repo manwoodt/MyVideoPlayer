@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.vk.myvideoplayer.ui.theme.MyVideoPlayerTheme
-import com.vk.presentation.ui.MainScreen
+import com.vk.presentation.navigation.NavigationScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -14,7 +14,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyVideoPlayerTheme {
-                MainScreen()
+                NavigationScreen()
             }
         }
     }

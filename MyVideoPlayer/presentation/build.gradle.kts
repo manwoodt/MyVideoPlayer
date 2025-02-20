@@ -40,6 +40,8 @@ dependencies {
 
     implementation(project(":domain"))
 
+    implementation(libs.gson)
+
     implementation (libs.koin.core)
     implementation (libs.koin.android)
     implementation (libs.koin.androidx.compose)
@@ -65,6 +67,7 @@ dependencies {
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.ui.tooling.preview.android)
     implementation(libs.androidx.media3.ui)
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
