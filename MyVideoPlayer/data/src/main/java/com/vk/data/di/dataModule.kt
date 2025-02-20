@@ -3,8 +3,8 @@ package com.vk.data.di
 import com.vk.data.BuildConfig
 import com.vk.data.SecureStorage
 import com.vk.data.apiService.ApiKeyInterceptor
-import com.vk.data.apiService.PixabayApiService
-import com.vk.data.apiService.PixabayApiServiceImpl
+import com.vk.data.apiService.YoutubeApiService
+import com.vk.data.apiService.YoutubeApiServiceImpl
 import com.vk.data.repositoryImpl.VideoRepositoryImpl
 import com.vk.domain.repository.VideoRepository
 import okhttp3.OkHttpClient
@@ -36,13 +36,13 @@ val dataModule = module {
 
     single {
         Retrofit.Builder()
-            .baseUrl("https://pixabay.com")
+            .baseUrl("https://www.googleapis.com/youtube/v3/")
             .client(get())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    single<PixabayApiService> { PixabayApiServiceImpl(get()) }
+    single<YoutubeApiService> { YoutubeApiServiceImpl(get()) }
 
     single< VideoRepository> { VideoRepositoryImpl(get()) }
 
