@@ -46,6 +46,8 @@ dependencies {
 
     implementation(libs.coil.compose)
 
+    implementation (libs.glide)
+
     implementation (libs.exoplayer)
 
     implementation (libs.androidx.media3.session)
@@ -62,6 +64,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.ui.tooling.preview.android)
+    implementation(libs.androidx.media3.ui)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

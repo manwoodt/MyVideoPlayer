@@ -1,6 +1,7 @@
 package com.vk.presentation.ui
 
 import android.util.Log
+import android.widget.ImageView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,10 +21,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
 import coil3.util.DebugLogger
 import coil3.util.Logger
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.vk.domain.model.VideoInfo
 import com.vk.mylibrary.R
 
@@ -36,24 +40,23 @@ fun VideoListItem(video: VideoInfo, onClick: () -> Unit) {
             .padding(vertical = 4.dp)
             .clickable { onClick() }
     ) {
-        val context = LocalContext.current
-
-        val customImageLoader = ImageLoader.Builder(context)
-            .logger(DebugLogger(Logger.Level.Verbose))
-            .build()
 
         Row(modifier = Modifier.padding(8.dp)) {
-            AsyncImage(
-                model = video.thumbnailUrl,
-                contentDescription = video.title,
-                imageLoader = customImageLoader,
-                modifier = Modifier.size(100.dp)
-                    .align(Alignment.CenterVertically),
-                contentScale = ContentScale.Crop,
-                error = painterResource(R.drawable.ic_error_placeholder),
-                placeholder = painterResource(R.drawable.ic_loading_placeholder)
-
-
+            AndroidView(
+                factory = { context ->
+                    ImageView(context).apply {
+                        scaleType = ImageView.ScaleType.CENTER_CROP
+                        Glide.with(context)
+                            .load(video.thumbnailUrl)
+                            .placeholder(R.drawable.ic_loading_placeholder)
+                            .error(R.drawable.ic_error_placeholder)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(this)
+                    }
+                },
+                modifier = Modifier
+                    .size(100.dp)
+                    .align(Alignment.CenterVertically)
             )
             Column(modifier = Modifier.padding(start = 16.dp)) {
                 Text(text = video.title, style = MaterialTheme.typography.titleMedium)
