@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,7 +36,17 @@ fun VideoListScreen(onVideoSelected: (VideoInfo) -> Unit = {}) {
     }
 
 
-    Scaffold(topBar = { TopAppBar(title = {Text("Видео")}) }) { innerPadding ->
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Видео", color = MaterialTheme.colorScheme.onPrimary) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary
+                )
+            )
+        })
+    { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -44,9 +55,9 @@ fun VideoListScreen(onVideoSelected: (VideoInfo) -> Unit = {}) {
             PullToRefreshBox(
                 isRefreshing = isLoading,
                 onRefresh = { viewModel.loadVideos() },
-                modifier = Modifier.fillMaxSize()
-            ) {
-                VideoListContent(videos,error, onVideoSelected)
+                modifier = Modifier.fillMaxSize(),
+                ) {
+                VideoListContent(videos, error, onVideoSelected)
             }
         }
     }
@@ -79,7 +90,7 @@ fun ErrorMessage(error: String?) {
 fun VideoList(videos: List<VideoInfo>, onVideoSelected: (VideoInfo) -> Unit) {
     LazyColumn {
         items(videos) { video ->
-            VideoListItem(video, onClick = {onVideoSelected(video)})
+            VideoListItem(video, onClick = { onVideoSelected(video) })
         }
     }
 }

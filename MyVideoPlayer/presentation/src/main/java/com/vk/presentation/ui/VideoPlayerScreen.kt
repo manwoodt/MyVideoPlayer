@@ -35,6 +35,8 @@ import androidx.media3.ui.PlayerView
 import com.vk.domain.model.VideoInfo
 import com.vk.presentation.viewmodel.VideoPlayerViewModel
 import android.content.res.Configuration
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 
@@ -82,10 +84,15 @@ fun VideoPlayerTopAppBar(onBack: () -> Unit) {
             IconButton(onClick = { onBack() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Назад"
+                    contentDescription = "Назад",
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
-        }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor =  MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary
+        )
     )
 }
 
