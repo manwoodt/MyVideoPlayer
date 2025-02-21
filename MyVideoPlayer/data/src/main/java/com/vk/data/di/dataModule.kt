@@ -1,10 +1,12 @@
 package com.vk.data.di
 
+import androidx.room.Room
 import com.vk.data.BuildConfig
 import com.vk.data.SecureStorage
 import com.vk.data.apiService.ApiKeyInterceptor
 import com.vk.data.apiService.CoverrApiService
 import com.vk.data.repositoryImpl.VideoRepositoryImpl
+import com.vk.data.room.AppDatabase
 import com.vk.domain.repository.VideoRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -45,8 +47,13 @@ val dataModule = module {
             .create(CoverrApiService::class.java)
     }
 
-  //  single<CoverrApiService> { CoverrApiServiceImpl(get()) }
+    single {
+        Room.databaseBuilder(get(), AppDatabase::class.java, "video_db")
+            .fallbackToDestructiveMigration()
+            .build()
+    }
 
-    single< VideoRepository> { VideoRepositoryImpl(get()) }
+
+    single<VideoRepository> { VideoRepositoryImpl(get()) }
 
 }
