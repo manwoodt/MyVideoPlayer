@@ -35,6 +35,8 @@ import androidx.media3.ui.PlayerView
 import com.vk.domain.model.VideoInfo
 import com.vk.presentation.viewmodel.VideoPlayerViewModel
 import android.content.res.Configuration
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
 
 @Composable
 fun VideoPlayerScreen(video: VideoInfo, onBack: () -> Unit) {
@@ -119,6 +121,18 @@ fun VideoPlayerContent(
             prepare()
             seekTo(viewModel.videoPosition)
             playWhenReady = viewModel.isPlaying
+
+            addListener(object : Player.Listener {
+                override fun onPlayerError(error: PlaybackException) {
+                    android.widget.Toast.makeText(
+                        context,
+                        "Отсутствует интернет: ${error.message}",
+                        android.widget.Toast.LENGTH_LONG
+                    ).show()
+                    viewModel.updatePlayingMode(false)
+
+                }
+            })
         }
     }
 
