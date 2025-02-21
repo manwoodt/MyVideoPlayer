@@ -1,13 +1,13 @@
 package com.vk.data.repositoryImpl
 
 import android.util.Log
-import com.vk.data.apiService.PixabayApiService
+import com.vk.data.apiService.CoverrApiService
 import com.vk.data.mapper.toDomain
 import com.vk.domain.model.VideoInfo
 import com.vk.domain.repository.VideoRepository
 
 class VideoRepositoryImpl(
-    private val apiService: PixabayApiService,
+    private val apiService: CoverrApiService,
 ) : VideoRepository {
 
     override suspend fun getVideos(): List<VideoInfo> {

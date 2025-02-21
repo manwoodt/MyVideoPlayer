@@ -13,7 +13,7 @@ class ApiKeyInterceptor(private val secureStorage: SecureStorage) : Interceptor 
         val apiKey = secureStorage.getApiKey() ?: ""
 
         val newUrl = originalUrl.newBuilder()
-            .addQueryParameter("key", apiKey)
+            .addQueryParameter("api_key", apiKey)
             .build()
         val newRequest = originalRequest.newBuilder().url(newUrl).build()
         return chain.proceed(newRequest)

@@ -1,9 +1,9 @@
 package com.vk.domain.model
 
 data class VideoInfo(
-    val id: Long,
+    val id: String,
     val title: String,
     val thumbnailUrl: String,
-    val duration: Long,
+    val duration: Int,
     val srcUrl: String
 )
