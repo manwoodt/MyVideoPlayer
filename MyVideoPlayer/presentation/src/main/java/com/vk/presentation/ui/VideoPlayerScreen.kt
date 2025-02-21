@@ -1,14 +1,16 @@
 package com.vk.presentation.ui
 
+import android.app.Activity
 import android.net.Uri
+import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -18,43 +20,87 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.media3.exoplayer.ExoPlayer
-import com.vk.domain.model.VideoInfo
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
+import com.vk.domain.model.VideoInfo
 
 @Composable
-//добавить кнопку назад
 fun VideoPlayerScreen(video: VideoInfo, onBack: () -> Unit) {
+    var isFullScreen by remember { mutableStateOf(false) }
 
-    Scaffold(topBar = { videoPlayerTopBar(onBack) },
+
+    FullScreenHandler(isFullScreen)
+
+    Scaffold(
+        topBar = {
+            if (!isFullScreen) {
+                VideoPlayerTopAppBar(onBack)
+            }
+        },
         content = { innerPadding ->
-            VideoPlayerContent(video, innerPadding)
-        })
+            BackHandler(isFullScreen) { isFullScreen = false }
+            VideoPlayerContent(video, innerPadding, isFullScreen) { newState ->
+                isFullScreen = newState
+            }
+        }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun videoPlayerTopBar(onBack: () -> Unit) {
+fun VideoPlayerTopAppBar(onBack: () -> Unit) {
     TopAppBar(
         title = { Text("Воспроизведение видео") },
         navigationIcon = {
             IconButton(onClick = { onBack() }) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back"
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Назад"
                 )
             }
         }
     )
 }
 
+
 @Composable
-fun VideoPlayerContent(video: VideoInfo, innerPadding: PaddingValues) {
+fun FullScreenHandler(isFullScreen: Boolean) {
+    val context = LocalContext.current
+    val activity = context as? Activity ?: return
+    val view = activity.findViewById<View>(android.R.id.content)
+    val window = activity.window
+
+    LaunchedEffect(isFullScreen) {
+        val controller = WindowInsetsControllerCompat(window, view)
+        if (isFullScreen) {
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+            controller.hide(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
+        } else {
+            WindowCompat.setDecorFitsSystemWindows(window, true)
+            controller.show(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
+        }
+    }
+}
+
+@Composable
+fun VideoPlayerContent(
+    video: VideoInfo,
+    innerPadding: PaddingValues,
+    isFullScreen: Boolean,
+    onFullScreenChange: (Boolean) -> Unit
+) {
     val context = LocalContext.current
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
@@ -69,6 +115,7 @@ fun VideoPlayerContent(video: VideoInfo, innerPadding: PaddingValues) {
             exoPlayer.release()
         }
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -83,10 +130,12 @@ fun VideoPlayerContent(video: VideoInfo, innerPadding: PaddingValues) {
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT
                     )
+
+                    setFullscreenButtonClickListener {
+                        onFullScreenChange(!isFullScreen)
+                    }
                 }
             }
         )
     }
 }
-
-

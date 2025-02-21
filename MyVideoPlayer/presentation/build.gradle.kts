@@ -42,6 +42,8 @@ dependencies {
 
     implementation(libs.gson)
 
+    implementation (libs.accompanist.systemuicontroller)
+
     implementation (libs.koin.core)
     implementation (libs.koin.android)
     implementation (libs.koin.androidx.compose)
@@ -66,6 +68,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview.android)
     implementation(libs.androidx.media3.ui)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.runtime.saved.instance.state)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
