@@ -7,6 +7,7 @@ import com.vk.data.apiService.ApiKeyInterceptor
 import com.vk.data.apiService.CoverrApiService
 import com.vk.data.repositoryImpl.VideoRepositoryImpl
 import com.vk.data.room.AppDatabase
+import com.vk.data.room.VideoDao
 import com.vk.domain.repository.VideoRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -53,7 +54,9 @@ val dataModule = module {
             .build()
     }
 
+   single<VideoDao> { get<AppDatabase>().videoDao() }
 
-    single<VideoRepository> { VideoRepositoryImpl(get()) }
+
+    single<VideoRepository> { VideoRepositoryImpl(get(),get()) }
 
 }

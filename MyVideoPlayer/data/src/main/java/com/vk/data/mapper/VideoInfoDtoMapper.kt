@@ -13,3 +13,4 @@ fun VideoInfoDto.toDomain(): VideoInfo {
         srcUrl = urls.mp4
     )
 }
+
