@@ -2,7 +2,6 @@ package com.vk.presentation.ui
 
 import android.app.Activity
 import android.net.Uri
-import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.activity.compose.BackHandler
@@ -11,7 +10,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,38 +20,52 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import com.vk.domain.model.VideoInfo
+import com.vk.presentation.viewmodel.VideoPlayerViewModel
+import android.content.res.Configuration
 
 @Composable
 fun VideoPlayerScreen(video: VideoInfo, onBack: () -> Unit) {
-    var isFullScreen by remember { mutableStateOf(false) }
+    val viewModel: VideoPlayerViewModel = viewModel()
+    val configuration = LocalConfiguration.current
 
+    LaunchedEffect(configuration.orientation) {
+        val shouldBeFullScreen = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        if (viewModel.isFullScreen != shouldBeFullScreen) {
+            viewModel.updateFullScreen(shouldBeFullScreen)
+        }
+    }
 
-    FullScreenHandler(isFullScreen)
+    FullScreenHandler(viewModel.isFullScreen)
 
     Scaffold(
         topBar = {
-            if (!isFullScreen) {
+            if (!viewModel.isFullScreen) {
                 VideoPlayerTopAppBar(onBack)
             }
         },
         content = { innerPadding ->
-            BackHandler(isFullScreen) { isFullScreen = false }
-            VideoPlayerContent(video, innerPadding, isFullScreen) { newState ->
-                isFullScreen = newState
+            BackHandler(viewModel.isFullScreen) { viewModel.updateFullScreen(false) }
+            VideoPlayerContent(
+                video,
+                innerPadding,
+                viewModel
+            ) { newState ->
+                if (newState != viewModel.isFullScreen) {
+                    viewModel.updateFullScreen(newState)
+                }
             }
         }
     )
@@ -66,7 +79,7 @@ fun VideoPlayerTopAppBar(onBack: () -> Unit) {
         navigationIcon = {
             IconButton(onClick = { onBack() }) {
                 Icon(
-                    imageVector = Icons.Filled.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Назад"
                 )
             }
@@ -78,12 +91,10 @@ fun VideoPlayerTopAppBar(onBack: () -> Unit) {
 @Composable
 fun FullScreenHandler(isFullScreen: Boolean) {
     val context = LocalContext.current
-    val activity = context as? Activity ?: return
-    val view = activity.findViewById<View>(android.R.id.content)
-    val window = activity.window
+    val window = (context as? Activity)?.window ?: return
 
     LaunchedEffect(isFullScreen) {
-        val controller = WindowInsetsControllerCompat(window, view)
+        val controller = WindowInsetsControllerCompat(window, window.decorView)
         if (isFullScreen) {
             WindowCompat.setDecorFitsSystemWindows(window, false)
             controller.hide(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars())
@@ -98,20 +109,27 @@ fun FullScreenHandler(isFullScreen: Boolean) {
 fun VideoPlayerContent(
     video: VideoInfo,
     innerPadding: PaddingValues,
-    isFullScreen: Boolean,
-    onFullScreenChange: (Boolean) -> Unit
+    viewModel: VideoPlayerViewModel,
+    onFullScreenChange: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
             setMediaItem(MediaItem.fromUri(Uri.parse(video.srcUrl)))
             prepare()
-            playWhenReady = true
+            seekTo(viewModel.videoPosition)
+            playWhenReady = viewModel.isPlaying
         }
+    }
+
+    LaunchedEffect(viewModel.isPlaying) {
+        exoPlayer.playWhenReady = viewModel.isPlaying
     }
 
     DisposableEffect(Unit) {
         onDispose {
+            viewModel.updateVideoPosition(exoPlayer.currentPosition)
+            viewModel.updatePlayingMode(exoPlayer.isPlaying)
             exoPlayer.release()
         }
     }
@@ -123,8 +141,8 @@ fun VideoPlayerContent(
     ) {
         AndroidView(
             modifier = Modifier.fillMaxSize(),
-            factory = { ctx ->
-                PlayerView(ctx).apply {
+            factory = { context ->
+                PlayerView(context).apply {
                     player = exoPlayer
                     layoutParams = FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
@@ -132,7 +150,7 @@ fun VideoPlayerContent(
                     )
 
                     setFullscreenButtonClickListener {
-                        onFullScreenChange(!isFullScreen)
+                        onFullScreenChange(!viewModel.isFullScreen)
                     }
                 }
             }
