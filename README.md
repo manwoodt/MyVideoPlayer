@@ -71,10 +71,10 @@
 ## Скриншоты
 
 ### Главный экран
-![Главный экран](assets/MainScreen.jpg)
+![Главный экран](assets/MainScreen.png)
 
 ### Полноэкранный режим
-![Полноэкранный режим](assets/PlayerScreen.jpg)
+![Полноэкранный режим](assets/PlayerScreen.png)
 
 ## Видео
 ![Видер](assets/MyMusicPlayer.gif)
