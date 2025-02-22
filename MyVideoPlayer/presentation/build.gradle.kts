@@ -69,6 +69,18 @@ dependencies {
     implementation(libs.androidx.media3.ui)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.runtime.saved.instance.state)
+    implementation(libs.androidx.ui.test.junit4.android)
+
+    androidTestImplementation(libs.ui.test.junit4)
+
+    testImplementation(libs.turbine)
+
+    testImplementation(libs.koin.test)
+    testImplementation(libs.koin.test.junit4)
+
+    testImplementation(libs.mockk)
+
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
