@@ -1,6 +1,5 @@
 package com.vk.data.repositoryImpl
 
-import android.util.Log
 import com.vk.data.apiService.CoverrApiService
 import com.vk.data.mapper.toDomain
 import com.vk.data.mapper.toEntity
@@ -26,7 +25,8 @@ class VideoRepositoryImpl(
             } else
                 throw Exception("Ошибка загрузки видео: ${response.errorBody()?.string()}")
         } catch (e: Exception) {
-            Log.e("VideoRepositoryImpl", "API error: ${e.message}. Возвращаем кэш.")
+            // не использовал Log.e, потому что в юнит тестах из-за этого не проходил тест
+          //  System.err.println("API error: ${e.message}. Возвращаем кэш.")
             videoDao.getAllVideoInfo().first().map { it.toDomain() }
         }
     }
