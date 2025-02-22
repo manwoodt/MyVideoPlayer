@@ -8,7 +8,6 @@ import com.vk.data.room.VideoDao
 import com.vk.domain.model.VideoInfo
 import com.vk.domain.repository.VideoRepository
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 
 class VideoRepositoryImpl(
     private val apiService: CoverrApiService,

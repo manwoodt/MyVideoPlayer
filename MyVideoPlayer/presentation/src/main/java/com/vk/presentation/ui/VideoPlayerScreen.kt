@@ -37,6 +37,7 @@ import com.vk.presentation.viewmodel.VideoPlayerViewModel
 import android.content.res.Configuration
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.platform.testTag
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 
@@ -161,7 +162,8 @@ fun VideoPlayerContent(
             .padding(innerPadding)
     ) {
         AndroidView(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize()
+                .testTag("PlayerView"),
             factory = { context ->
                 PlayerView(context).apply {
                     player = exoPlayer
@@ -178,3 +180,4 @@ fun VideoPlayerContent(
         )
     }
 }
+

@@ -56,7 +56,7 @@ fun VideoListScreen(onVideoSelected: (VideoInfo) -> Unit = {}) {
                 isRefreshing = isLoading,
                 onRefresh = { viewModel.loadVideos() },
                 modifier = Modifier.fillMaxSize(),
-                ) {
+            ) {
                 VideoListContent(videos, error, onVideoSelected)
             }
         }
